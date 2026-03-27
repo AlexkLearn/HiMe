@@ -11,8 +11,14 @@ const profileRouter = Router()
 
 // Route: 'api/profile'
 profileRouter.patch('/', authorize, updateProfilePic)
+
+// Route: 'api/profile'
 profileRouter.post('/', authorize, setProfile)
+
+// Route: 'api/profile/username'
 profileRouter.patch('/username', authorize, updateUsername)
+
+// Route: 'api/profile/bio'
 profileRouter.patch('/bio', authorize, updateBio)
 
 

@@ -15,7 +15,7 @@ messageRouter.get('/preview', authorize, getUsersPreview)
 // Route: 'api/message/'
 messageRouter.get('/:id', authorize, getMessages)
 
-// Route: 'api/message/'
+// Route: 'api/message/send/'
 messageRouter.post('send/:id', authorize, sendMessage)
 
 

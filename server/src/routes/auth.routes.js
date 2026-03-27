@@ -17,8 +17,8 @@ authRouter.post('/login', login)
 // Route: 'api/auth/logout'
 authRouter.post('/logout', logout)
 
-// Route: 'api/auth/authcheck'
-authRouter.get('/authcheck', authorize, checkAuth)
+// Route: 'api/auth/check'
+authRouter.get('/check', authorize, checkAuth)
 // 👆 Runs on page reload to check if the user is still authenticated
 
 
