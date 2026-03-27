@@ -1,5 +1,6 @@
 import express from "express";
 import cookieparser from "cookie-parser";
+import cors from "cors"
 
 import authRouter from "./routes/auth.routes.js";
 import profileRouter from "./routes/profile.routes.js";
@@ -14,6 +15,11 @@ const App = express()
 // 3rd party middlewares
 App.use(express.json())
 App.use(cookieparser())
+App.use(cors({
+  origin: "http://localhost:5173",
+  methods: [ 'GET', 'POST', 'PATCH', 'DELETE' ],
+  credentials: true,
+}))
 
 
 // Routes
