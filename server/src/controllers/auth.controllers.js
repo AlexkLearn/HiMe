@@ -95,3 +95,14 @@ export const logout = async (req, res) => {
     res.status(500).json({ LogoutError: e.message })
   }
 }
+
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user)
+  }
+  catch (e) {
+    console.error(`AuthError: ${e.message}`);
+    res.status(500).json({ message: "Internal server error!" })
+  }
+}
