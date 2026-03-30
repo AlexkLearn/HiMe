@@ -1,11 +1,11 @@
 {
-  "name": "HiMe_server",
+  "name": "hime-server",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon --exec \"node --trace-warnings\" src/index.js"
   },
   "keywords": [],
   "author": "",
