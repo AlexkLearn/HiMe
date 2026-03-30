@@ -7,6 +7,7 @@ const profileSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    isLowercase: true,
     minLength: [2, "Username must not be below 2 characters!"],
     maxLength: [15, "Username must not exceed 15 characters!"]
   }, 
@@ -19,6 +20,7 @@ const profileSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: User,
     index: true,
+    unique: true,
     required: true
   }
 })

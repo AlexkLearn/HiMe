@@ -89,21 +89,21 @@ export const login = async (req, res) => {
 export const loginWithUsername = async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username.trim() || !password.trim()) {
-    return res.status(400).json({ message: "Missing required fields!" })
-  }
+  if (typeof username !== 'string' || typeof password !== 'string' || !username.trim() || !password.trim()) (
+    res.status(400).json({ message: "Missing required fields!" })
+  )
 
   try {
-    const existingProfile = await Profile.findOne({ username }).populate("user")
-    if (!existingProfile) {
-      return res.status(400).json({ message: "Invalid credentials!" })
-    }
-    const user = existingProfile.user;
+    const existingProfile = await Profile.findOne({ username: username.toLowerCase() }).populate("user")
+    if (!existingProfile || !existingProfile.user) (
+      res.status(400).json({ message: "Invalid credentials!" })
+    )
 
+    const user = existingProfile.user;
     const isMatch = await user.comparePassword(password)
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials!" })
-    }
+    if (!isMatch) (
+      res.status(400).json({ message: "Invalid credentials!" })
+    )
 
     const token = jwt.sign(
       { id: user._id },

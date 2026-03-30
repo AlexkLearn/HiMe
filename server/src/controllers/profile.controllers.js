@@ -42,7 +42,7 @@ export const setAndUpdateProfile = async (req, res) => {
 
     if (username) {
       const taken = await Profile.findOne({
-        username,
+        username: username.toLowerCase(),
         user: { $ne: id },
       });
 
@@ -52,7 +52,7 @@ export const setAndUpdateProfile = async (req, res) => {
     }
 
     const updates = {};
-    if (username) updates.username = username;
+    if (username) updates.username = username.toLowerCase();
     if (bio) updates.bio = bio;
 
     const profile = await Profile.findOneAndUpdate(
@@ -67,7 +67,10 @@ export const setAndUpdateProfile = async (req, res) => {
 
     return res.status(200).json(profile);
   } catch (e) {
-    console.error(`Error setting/updating profile: ${e.message}`);
-    return res.status(500).json({ message: "Internal server error!" });
+    if (e.code === 11000 || (e.name === 'MongoServerError' && e.code === 11000)) {
+      return res.status(409).json({ message: "Username already exists" });
+    }
+    console.error(`Error setting profile: ${e.message}`);
+    res.status(500).json({ Error: "Internal server error!" });
   }
 };
