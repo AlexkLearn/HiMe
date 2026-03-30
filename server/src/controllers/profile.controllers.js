@@ -60,7 +60,7 @@ export const setAndUpdateProfile = async (req, res) => {
       { $set: updates },
       {
         upsert: true,
-        new: true,
+        returnDocument: 'after',
         setDefaultsOnInsert: true,
         runValidators: true,
         context: 'query'
