@@ -34,7 +34,8 @@ export const setProfile = async (req, res) => {
 
   try {
     const profile = await Profile.findOneAndUpdate(
-      { username, bio}, {user: id },
+      { user: id },
+      { username, bio },
       { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
 
