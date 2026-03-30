@@ -36,7 +36,7 @@ export const setAndUpdateProfile = async (req, res) => {
       return res.status(400).json({ message: "Username is required" });
     }
 
-    if (!username && !bio) {
+    if (!username && ( bio === undefined || bio === null )) {
       return res.status(400).json({ message: "At least one field is required" });
     }
 
@@ -62,14 +62,13 @@ export const setAndUpdateProfile = async (req, res) => {
         upsert: true,
         new: true,
         setDefaultsOnInsert: true,
+        runValidators: true,
+        context: 'query'
       }
     );
 
     return res.status(200).json(profile);
   } catch (e) {
-    if (e.code === 11000 || (e.name === 'MongoServerError' && e.code === 11000)) {
-      return res.status(409).json({ message: "Username already exists" });
-    }
     console.error(`Error setting profile: ${e.message}`);
     res.status(500).json({ Error: "Internal server error!" });
   }
