@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  if (!email.trim() || !password.trim()) return res.status(400).json({ message: "Missing required fields!" })
+  if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password.trim()) return res.status(400).json({ message: "Missing required fields!" })
   
 
   try {

@@ -7,6 +7,7 @@ const profileSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
     lowercase: true,
     minLength: [2, "Username must not be below 2 characters!"],
     maxLength: [15, "Username must not exceed 15 characters!"]
@@ -14,6 +15,7 @@ const profileSchema = new Schema({
   bio: {
     type: String,
     default: "",
+    trim: true,
     maxLength: [75, "Bio must not exceed 75 characters!"]
   },
   user: {

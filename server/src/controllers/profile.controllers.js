@@ -42,7 +42,7 @@ export const setAndUpdateProfile = async (req, res) => {
 
     if (username) {
       const taken = await Profile.findOne({
-        username: username.toLowerCase(),
+        username: username.toLowerCase().trim(),
         user: { $ne: id },
       });
 
@@ -52,7 +52,7 @@ export const setAndUpdateProfile = async (req, res) => {
     }
 
     const updates = {};
-    if (username) updates.username = username.toLowerCase();
+    if (username) updates.username = username.toLowerCase().trim();
     if (bio) updates.bio = bio;
 
     const profile = await Profile.findOneAndUpdate(
