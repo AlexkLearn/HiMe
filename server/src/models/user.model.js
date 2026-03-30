@@ -6,16 +6,20 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
+    trim: true,
+    lowercase: true,
     unique: true
   },
   fullname: {
     type: String,
     required: true,
+    trim: true,
     minLength: [2, "Fullname must not be below 2 characters"]
   },
   password: {
     type: String,
     required: true,
+    trim: true,
     minLength: [6, "Password must have a minimum of 6 characters" ]
   },
   profilePic: {

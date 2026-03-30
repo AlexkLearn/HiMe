@@ -25,71 +25,51 @@ export const updateProfilePic = async (req, res) => {
 }
 
 
-export const setProfile = async (req, res) => {
+export const setAndUpdateProfile = async (req, res) => {
   const { username, bio } = req.body;
   const id = req.user._id;
-  if (!username) {
-    return res.status(400).json({ message: "Username required" });
-  }
 
   try {
+    const existingProfile = await Profile.findOne({ user: id });
+
+    if (!existingProfile && !username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+
+    if (!username && ( bio === undefined || bio === null )) {
+      return res.status(400).json({ message: "At least one field is required" });
+    }
+
+    if (username) {
+      const taken = await Profile.findOne({
+        username: username.toLowerCase().trim(),
+        user: { $ne: id },
+      });
+
+      if (taken) {
+        return res.status(400).json({ message: "Username is taken" });
+      }
+    }
+
+    const updates = {};
+    if (username) updates.username = username.toLowerCase().trim();
+    if (bio) updates.bio = bio;
+
     const profile = await Profile.findOneAndUpdate(
       { user: id },
-      { username, bio },
-      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+      { $set: updates },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+        runValidators: true,
+        context: 'query'
+      }
     );
 
-    res.status(201).json(profile);
+    return res.status(200).json(profile);
   } catch (e) {
     console.error(`Error setting profile: ${e.message}`);
     res.status(500).json({ Error: "Internal server error!" });
   }
-}
-
-
-export const updateUsername = async (req, res) => {
-  const { username } = req.body;
-  const id = req.user._id;
-  if (!username) {
-    return res.status(400).json({ message: 'Username required' });
-  }
-
-  try {
-    const updatedProfile = await Profile.findOneAndUpdate(
-      { user: id },
-      { username },
-      { returnDocument: 'after' }
-    );
-    if (!updatedProfile) {
-      return res.status(404).json({ message: 'Profile not found' });
-    }
-    res.status(200).json(updatedProfile);
-  } catch (e) {
-    console.error(`Error updating Username: ${e.message}`);
-    res.status(500).json({ Error: "Internal server error!" });
-  }
-}
-
-
-export const updateBio = async (req, res) => {
-  const { bio } = req.body;
-  const id = req.user._id;
-  if (!bio) {
-    return res.status(400).json({ message: 'Bio required' });
-  }
-
-  try {
-    const updatedProfile = await Profile.findOneAndUpdate(
-      { user: id },
-      { bio },
-      { returnDocument: 'after' }
-    );
-    if (!updatedProfile) {
-      return res.status(404).json({ message: 'Profile not found' });
-    }
-    res.status(200).json(updatedProfile);
-  } catch (e) {
-    console.error(`Error updating Bio: ${e.message}`);
-    res.status(500).json({ Error: "Internal server error!" });
-  }
-}
+};
