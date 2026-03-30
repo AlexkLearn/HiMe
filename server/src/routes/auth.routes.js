@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  checkAuth, login,
+  checkAuth, login, loginWithUsername,
   logout, signup
 } from "../controllers/auth.controllers.js";
 import authorize from "../middlewares/auth.middleware.js";
@@ -13,6 +13,9 @@ authRouter.post('/signup', signup)
 
 // Route: 'api/auth/login'
 authRouter.post('/login', login)
+
+// Route: 'api/auth/login/username'
+authRouter.post('/login/username', loginWithUsername)
 
 // Route: 'api/auth/logout'
 authRouter.post('/logout', logout)

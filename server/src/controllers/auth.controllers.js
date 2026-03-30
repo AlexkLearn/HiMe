@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import Profile from "../models/profile.model.js";
 import { JWT_EXPIRES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
 
 
@@ -82,6 +83,48 @@ export const login = async (req, res) => {
     res.status(500).json({ LoginError: e.message })
   }
 
+}
+
+
+export const loginWithUsername = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username.trim() || !password.trim()) {
+    return res.status(400).json({ message: "Missing required fields!" })
+  }
+
+  try {
+    const existingProfile = await Profile.findOne({ username }).populate("user")
+    if (!existingProfile) {
+      return res.status(400).json({ message: "Invalid credentials!" })
+    }
+    const user = existingProfile.user;
+
+    const isMatch = await user.comparePassword(password)
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials!" })
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    )
+
+    res.cookie('jwt', token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: NODE_ENV !== "development"
+    })
+
+    res.status(200).json(token)
+
+  }
+  catch (e) {
+    console.error(`Login Error: ${e.message}`);
+    res.status(500).json({ LoginError: e.message })
+  }
 }
 
 
