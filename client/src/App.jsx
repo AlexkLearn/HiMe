@@ -9,11 +9,12 @@ import Profile from "@pages/Profile";
 import Settings from "@pages/Settings";
 import Signup from "@pages/Signup";
 import Login from "@pages/Login";
+
 import { Loader } from "lucide-react"
 
 
 export default function App () {
-  const { authUser, checkAuth, isChekingAuth } = useAuth();
+  const { authUser, checkAuth, isCheckingAuth } = useAuth();
 
   useEffect(() => {
     checkAuth()
@@ -21,7 +22,7 @@ export default function App () {
 
   console.log(authUser);
 
-  if (isChekingAuth && !authUser)
+  if (isCheckingAuth && !authUser)
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
