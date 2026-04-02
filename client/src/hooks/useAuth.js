@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import API from "@services/api";
 import { create } from "zustand";
+
 
 const useAuth = create(
   (set) => ({
@@ -21,6 +23,10 @@ const useAuth = create(
       finally {
         set({ isCheckingAuth: false })
       }
+    },
+
+    signup: async (data) => {
+      //
     }
 
   })
