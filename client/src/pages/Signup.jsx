@@ -22,12 +22,12 @@ export default function Signup () {
 
 
   const validateForm = () => {
-    // todo
+    // Todo
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // to do
+    // To do
   }
 
 
